@@ -1,0 +1,11 @@
+[package]
+name = "gl"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+glfw = "0.60.0"
+glow = "0.16.0"
+mini = { version = "0.1.0", git = "https://github.com/zx3no/mini" }
+window = { version = "0.1.0", path = "../projects/window" }
+# window = { git = "https://github.com/zx3no/window", version = "0.1.0" }
