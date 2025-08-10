@@ -1,5 +1,6 @@
-use glow::*;
+#![allow(unused)]
 // #![windows_subsystem = "windows"]
+use glow::*;
 use mini::{defer_results, profile};
 use window::*;
 
@@ -15,15 +16,15 @@ fn load_opengl() {
     let opengl32 = unsafe { LoadLibraryA(b"opengl32.dll\0".as_ptr()) };
     assert!(!opengl32.is_null());
 
-    // gl::load_with(|name| {
-    //     let name = std::ffi::CString::new(name).unwrap();
-    //     let p = unsafe { wglGetProcAddress(name.as_ptr()) };
-    //     if !p.is_null() {
-    //         p
-    //     } else {
-    //         unsafe { (GetProcAddress(opengl32, name.as_ptr())) as *const c_void }
-    //     }
-    // });
+    gl::load_with(|name| {
+        let name = std::ffi::CString::new(name).unwrap();
+        let p = unsafe { wglGetProcAddress(name.as_ptr()) };
+        if !p.is_null() {
+            p
+        } else {
+            unsafe { (GetProcAddress(opengl32, name.as_ptr())) as *const c_void }
+        }
+    });
 }
 
 fn load_glow() -> Context {
