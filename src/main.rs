@@ -33,8 +33,6 @@ fn main() {
 
         gl::ClearColor(0.1, 0.2, 0.3, 1.0);
 
-        gl::CreateTextures(0, n, textures);
-
         loop {
             match window.event() {
                 Some(Event::Quit | Event::Input(window::Key::Escape, _)) => break,
