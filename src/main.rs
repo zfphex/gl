@@ -1,6 +1,5 @@
 #![allow(unused)]
 // #![windows_subsystem = "windows"]
-use glow::*;
 use mini::{defer_results, profile};
 use window::*;
 
@@ -27,45 +26,14 @@ fn load_opengl() {
     });
 }
 
-fn load_glow() -> Context {
-    let opengl32 = unsafe { LoadLibraryA(b"opengl32.dll\0".as_ptr()) };
-    assert!(!opengl32.is_null());
-    unsafe {
-        Context::from_loader_function_cstr(|name| {
-            // let name = std::ffi::CString::new(name).unwrap();
-            let p = wglGetProcAddress(name.as_ptr());
-            if !p.is_null() {
-                p
-            } else {
-                (GetProcAddress(opengl32, name.as_ptr())) as *const c_void
-            }
-        })
-    }
-}
-
 fn main() {
     unsafe {
-        defer_results!();
-        profile!();
-
         let window = create_window("gl2", 0, 0, 800, 600, WindowStyle::DEFAULT);
-        let gl = load_glow();
-        let version = gl.version();
-        println!("OpenGL version: {}.{}", version.major, version.minor);
+        load_opengl();
 
-        // unsafe {
-        //     gl::ClearColor(0.1, 0.2, 0.3, 1.0);
-        // }
+        gl::ClearColor(0.1, 0.2, 0.3, 1.0);
 
-        let texture = gl.create_named_texture(glow::TEXTURE_2D).unwrap();
-        gl.texture_storage_2d(texture, 1, RGBA8, 800, 600);
-        gl.texture_parameter_i32(texture, TEXTURE_MIN_FILTER, LINEAR as i32);
-        gl.texture_parameter_i32(texture, TEXTURE_MAG_FILTER, LINEAR as i32);
-
-        // Bindless texture handle
-        // Glow does not support bindless textures... :(
-        // tex_handle = gl.get_texture_handle_arb(output_tex);
-        // gl.make_texture_handle_resident_arb(tex_handle);
+        gl::CreateTextures(0, n, textures);
 
         loop {
             match window.event() {
@@ -73,10 +41,9 @@ fn main() {
                 Some(Event::Input(key, modifiers)) => println!("{:?} {:?}", key, modifiers),
                 _ => {}
             }
-            // unsafe { gl.clear(glow::COLOR_BUFFER_BIT) };
-            // unsafe { gl::Clear(gl::COLOR_BUFFER_BIT) };
+
+            unsafe { gl::Clear(gl::COLOR_BUFFER_BIT) };
             window.swap_buffers();
-            // return;
         }
     }
 }
